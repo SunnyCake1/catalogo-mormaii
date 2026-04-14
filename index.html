@@ -5,35 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mormaii Vision - Catálogo Interativo</title>
     <style>
-	/* Rodapé */
-        footer {
-            margin-top: auto;
-            padding: 20px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.05);
-            text-align: center;
-            border-top: 1px solid #ddd;
-            font-size: 0.9rem;
-            color: var(--dark-blue);
-        }
-
-        footer a {
-            color: var(--mormaii-blue);
-            text-decoration: none;
-            font-weight: bold;
-            margin: 0 10px;
-            transition: 0.3s;
-        }
-
-        footer a:hover {
-            color: var(--dark-blue);
-            text-decoration: underline;
-        }
-
-        .social-icons {
-            margin-top: 10px;
-            font-size: 1.2rem;
-        }
         :root {
             --mormaii-blue: #0097a7;
             --dark-blue: #005662;
@@ -44,13 +15,16 @@
 
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
-            margin: 0; display: flex; height: 100vh; 
-            background: var(--bg-color); color: var(--text-color); 
+            margin: 0; display: flex; min-height: 100vh; 
+            background: var(--bg-color); color: var(--text-color);
+            flex-direction: row; /* Padrão desktop */
         }
 
+        /* Menu Lateral (Sidebar) */
         .sidebar { 
             width: 300px; background: var(--dark-blue); color: white; 
             padding: 20px; box-shadow: 4px 0 10px rgba(0,0,0,0.1); overflow-y: auto;
+            flex-shrink: 0;
         }
         
         .sidebar h2 { border-bottom: 2px solid var(--mormaii-blue); padding-bottom: 10px; text-transform: uppercase; font-size: 1rem; text-align: center; }
@@ -64,9 +38,9 @@
         .lente-card:hover { background: rgba(255,255,255,0.15); }
         .lente-card.active { background: var(--mormaii-blue); border-color: white; font-weight: bold; }
 
-        .main-content { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        /* Área Principal */
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
         
-        /* Painel do Produto (Lente) */
         .lente-display {
             width: 100%; max-width: 800px; background: white; border-radius: 15px;
             display: flex; padding: 20px; gap: 20px; margin-bottom: 30px;
@@ -75,29 +49,51 @@
         .lente-img-container { width: 40%; }
         .lente-img-container img { width: 100%; border-radius: 10px; object-fit: contain; }
         .lente-info-container { width: 60%; }
-        .lente-info-container h2 { color: var(--dark-blue); margin-top: 0; }
+        .lente-info-container h2 { color: var(--dark-blue); margin-top: 0; font-size: 1.2rem; }
 
-        .tech-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 25px; }
+        .tech-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px; }
 
         .tech-icon {
-            width: 70px; height: 70px; background: var(--mormaii-blue); 
+            width: 60px; height: 60px; background: var(--mormaii-blue); 
             border-radius: 10px; cursor: pointer; transition: 0.3s; 
             display: flex; align-items: center; justify-content: center; padding: 5px;
         }
         .tech-icon img { width: 100%; height: 100%; object-fit: contain; }
-        .tech-icon:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,151,167,0.3); }
 
         .display-panel {
             width: 100%; max-width: 800px; background: var(--card-bg); 
-            border-radius: 15px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-radius: 15px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             text-align: center; border-top: 6px solid var(--mormaii-blue);
         }
 
-        .video-container { width: 100%; border-radius: 10px; overflow: hidden; background: #000; margin-bottom: 20px; }
+        .video-container { width: 100%; border-radius: 10px; overflow: hidden; background: #000; margin-bottom: 15px; }
         video { width: 100%; height: auto; max-height: 350px; }
 
-        .tech-title { color: var(--mormaii-blue); font-size: 1.4rem; margin: 10px 0; }
-        .tech-desc { line-height: 1.5; font-size: 1rem; color: #444; }
+        footer { margin-top: auto; padding: 20px; text-align: center; font-size: 0.8rem; opacity: 0.7; }
+        footer a { color: var(--mormaii-blue); text-decoration: none; font-weight: bold; }
+
+        /* --- CONFIGURAÇÕES PARA CELULAR --- */
+        @media (max-width: 768px) {
+            body { flex-direction: column; } /* Joga a sidebar para cima */
+            
+            .sidebar { 
+                width: 100%; padding: 10px; box-sizing: border-box; 
+                height: auto; max-height: 200px; /* Limita altura do menu no mobile */
+            }
+            
+            #lista-lentes {
+                display: flex; overflow-x: auto; gap: 10px; padding-bottom: 5px;
+            }
+            
+            .lente-card {
+                flex: 0 0 auto; margin-bottom: 0; padding: 10px 15px; white-space: nowrap;
+            }
+
+            .lente-display { flex-direction: column; text-align: center; }
+            .lente-img-container, .lente-info-container { width: 100%; }
+            
+            .tech-icon { width: 55px; height: 55px; }
+        }
     </style>
 </head>
 <body>
@@ -115,7 +111,7 @@
             <div class="lente-info-container">
                 <h2 id="lente-nome-display"></h2>
                 <p id="lente-desc-display"></p>
-                <small>Clique nos ícones abaixo para ver as tecnologias aplicadas:</small>
+                <small>Toque nos ícones abaixo para ver a tecnologia:</small>
             </div>
         </div>
 
@@ -130,24 +126,23 @@
             <h3 id="tech-nome" class="tech-title"></h3>
             <p id="tech-desc" class="tech-desc"></p>
         </div>
-	<footer>
+
+        <footer>
             <p>Desenvolvido por <strong>Matheus Felipe 🤓</strong></p>
-            <div class="social-icons">
-                <a href="https://instagram.com/matheusuwinks" target="_blank">Instagram</a>
-            </div>
+            <a href="https://instagram.com/matheusuwinks" target="_blank">Instagram</a>
         </footer>
     </div>
 
     <script>
         const lentes = [
-	    { id: 'Tecnologias', nome: 'Tecnologias Mormaii', desc: 'Todas as tecnologias disponíveis em nossas lentes.', foto: 'lentesmormaii.png', techs: ['fitting','inset','ergo','clear','slim','individual','freeform', 'Work', 'Flow'] },
+            { id: 'Tecnologias', nome: 'Tecnologias Mormaii', desc: 'Todas as tecnologias disponíveis em nossas lentes.', foto: 'lentesmormaii.png', techs: ['fitting','inset','ergo','clear','slim','individual','freeform', 'Work', 'Flow'] },
             { id: 'starter', nome: 'Mormaii Starter', desc: 'A porta de entrada para a tecnologia digital. Oferece conforto visual e fácil adaptação para novos usuários de multifocais.', foto: 'Screenshot_1.png', techs: ['fitting','inset','freeform'] },
             { id: 'urban', nome: 'Mormaii Urban', desc: 'Ideal para o dia a dia na cidade. Otimizada para quem alterna constantemente entre visão de longe e perto.', foto: 'Urban.png', techs: ['fitting','inset','freeform'] },
             { id: 'power', nome: 'Mormaii Power Vision', desc: 'Foco em performance. Proporciona campos de visão mais amplos e redução de distorções laterais.', foto: 'power vision.png', techs: ['fitting','inset','slim','freeform'] },
             { id: 'extreme', nome: 'Mormaii Extreme', desc: 'A lente para situações extremas de uso. Máxima nitidez e estabilidade para usuários exigentes.', foto: 'Extreme.png', techs: ['fitting','inset','ergo','slim','freeform'] },
             { id: 'ocean', nome: 'Mormaii Ocean', desc: 'Nossa lente premium mais completa. Integra todas as tecnologias disponíveis para uma experiência visual sem limites.', foto: 'Ocean.png', techs: ['fitting','inset','ergo','clear','slim','individual','freeform'] },
             { id: 'work', nome: 'Mormaii Work', desc: 'Específica para ambientes internos e trabalho. Conforto incomparável para visão de perto e intermediária.', foto: 'WORK.png', techs: ['Work'] },
-	    { id: 'flow', nome: 'Mormaii Flow', desc: 'Mormaii Flow traz a essência da liberdade e do movimento para sua rotina! Essas lentes oferecem uma experiência visual única, proporcionando suavidade e conforto para que você possa aproveitar cada momento ao máximo.', foto: 'Flow.png', techs: ['Flow'] }
+            { id: 'flow', nome: 'Mormaii Flow', desc: 'Mormaii Flow traz a essência da liberdade e do movimento para sua rotina!', foto: 'Flow.png', techs: ['Flow'] }
         ];
 
         const techs = {
@@ -158,8 +153,8 @@
             'slim': { nome: 'Slim Technology', desc: 'Lentes mais finas e leves com cálculos matemáticos.', img: 'slim technology.png', video: 'slim technology.mp4' },
             'individual': { nome: 'Individual Personalization', desc: 'Lente fabricada sob medida para seu comportamento visual.', img: 'individual personalization.png', video: 'Individual Personalization.mp4' },
             'freeform': { nome: 'Freeform Technology', desc: 'Surfaçagem digital ponto a ponto de alta precisão.', img: 'freeform technology.png', video: 'Freeform.mp4' }, 
-            'Work': { nome: 'Work Technology', desc: 'As lentes Mormaii Work com foco intermediário e para perto são ideais para pessoas que buscam alto desempenho profissional.', img: 'Work1.png', video: 'Work.mp4' },
-	    	'Flow': { nome: 'Flow Technology', desc: 'Mormaii Flow traz uma leve potência por idade para que o usuário tenha facilidade em adaptação de multifocais no futuro.', img: 'flow1.png', video: 'Flow.mp4' }
+            'Work': { nome: 'Work Technology', desc: 'Ideal para pessoas que buscam alto desempenho profissional em ambientes internos.', img: 'Work1.png', video: 'Work.mp4' },
+            'Flow': { nome: 'Flow Technology', desc: 'Traz uma leve potência por idade para facilitar a adaptação futura.', img: 'flow1.png', video: 'Flow.mp4' }
         };
 
         const sidebarLista = document.getElementById('lista-lentes');
